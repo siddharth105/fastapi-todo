@@ -27,11 +27,6 @@ def create_todo(todo: schemas.TodoCreate, db: Session = Depends(get_db)):
     db.refresh(db_todo)
     return schemas.TodoResponse.from_orm(db_todo)
 
-@app.get("/todos/", response_model=List[schemas.TodoResponse])
-def read_todos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    todos = db.query(models.Todo).offset(skip).limit(limit).all()
-    return [schemas.TodoResponse.from_orm(todo) for todo in todos]
-
 @app.get("/todos/{id}", response_model=schemas.TodoResponse)
 def read_todo(id: int, db: Session = Depends(get_db)):
     todo = db.query(models.Todo).filter(models.Todo.id == id).first()
